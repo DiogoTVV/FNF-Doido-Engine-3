@@ -98,6 +98,21 @@ class Strumline extends FlxGroup
 			splashGroup.add(splash);
 			//trace('added ${note.strumlineID} $splashName lol');
 		}
+		// preloading covers
+		if(note.children.length > 0)
+		{
+			splashName += "-cover";
+			if(!spawnedSplashes.contains(splashName))
+			{
+				spawnedSplashes.push(splashName);
+
+				var splash = new SplashNote(true);
+				splash.updateData(note.children[note.children.length - 1]);
+				coverGroup.add(splash);
+				splash.destroy();
+				//trace('added cover ${note.strumlineID} $splashName');
+			}
+		}
 	}
 
 	public function playSplash(note:Note, isHold:Bool = false)

@@ -114,12 +114,13 @@ class SplashNote extends FlxSprite
 		else
 		{
 			var holdPercent = (holdNote.holdHitLength / holdNote.holdLength);
-			if(holdNote.gotReleased || holdPercent >= 0.95)
+			var sick:Bool = holdPercent >= data.Timings.holdTimings[0][0];
+			if(holdNote.gotReleased || sick)
 			{
 				if(animation.curAnim.name != "splash")
 				{
 					playAnim("splash");
-					if(holdPercent < data.Timings.holdTimings[0][0])
+					if(!sick)
 						visible = false;
 				}
 			}
