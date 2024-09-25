@@ -62,6 +62,12 @@ class OptionsSubState extends MusicBeatSubState
 			"Ratings on HUD",
 			"Song Timer",
 		],
+        "debug" => [
+            "Play from Editor",
+            "Skip Intro",
+            "Editors",
+            "Debug Keys"
+        ]
 	];
     
     var restartTimer:Float = 0;

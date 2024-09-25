@@ -1508,6 +1508,7 @@ class ChartingState extends MusicBeatState
 				PlayState.songDiff = songDiff;
 				PlayState.SONG = SONG;
 				PlayState.EVENTS = EVENTS;
+				PlayState.startConductor = conductorOffset;
 				Main.switchState(new LoadSongState());
 			}
 			

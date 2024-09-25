@@ -47,6 +47,7 @@ class PlayState extends MusicBeatState
 	public var musicList:Array<FlxSound> = [];
 
 	public static var songLength:Float = 0;
+	public static var startConductor:Float = 0;
 
 	// to avoid updating discord rpc each frame, it only updates each second
 	private var discordUpdateTime:Float = 0;
@@ -160,6 +161,7 @@ class PlayState extends MusicBeatState
 	{
 		blueballed = 0;
 		playedCutscene = false;
+		startConductor = 0;
 	}
 
 	override public function create()
@@ -352,7 +354,11 @@ class PlayState extends MusicBeatState
 		addMusic(vocals);
 
 		//Conductor.setBPM(160);
-		Conductor.songPos = -Conductor.crochet * 5;
+		setTime(startConductor);
+		FlxG.watch.add(PlayState, "startConductor");
+		FlxG.watch.add(Conductor, "songPos");
+		FlxG.watch.add(inst, "time");
+		FlxG.watch.add(vocals, "time");
 		
 		// setting up the camera following
 		//followCamera(dad);
@@ -364,6 +370,7 @@ class PlayState extends MusicBeatState
 		
 		for(note in unspawnNotes)
 		{
+			if(note.songTime < startConductor - 2) unspawnNotes.remove(note);
 			var thisStrumline = dadStrumline;
 			for(strumline in strumlines)
 				if(note.strumlineID == strumline.ID)
@@ -379,6 +386,13 @@ class PlayState extends MusicBeatState
 			note.updateData(note.songTime, note.noteData, note.noteType, noteAssetMod);
 			note.reloadSprite();
 			note.setSongOffset();
+
+			/* TODO! MAKE THIS NOT HAPPEN
+			if(note.songTime < inst.time) {
+				note.skip = true;
+				trace("found note to skip");
+			}
+			*/
 			
 			// oop
 			
@@ -390,6 +404,7 @@ class PlayState extends MusicBeatState
 				note.noteAngle = FlxG.random.int(-5, 5);*/
 		}
 		for(event in unspawnEvents) {
+			//if(event.songTime < startConductor - 2) continue;
 			event.setSongOffset();
 		}
 		
@@ -468,8 +483,32 @@ class PlayState extends MusicBeatState
 			startCountdown();
 	}
 
+	function skippedCountdown()
+	{
+		startedCountdown = true;
+		for(strumline in strumlines.members)
+		{
+			for(strum in strumline.strumGroup)
+			{	
+				// dad's notes spawn backwards
+				var strumMult:Int = (strumline.isPlayer ? strum.strumData : 3 - strum.strumData);
+				strum.y = strum.initialPos.y;
+				strum.alpha = 0.9;
+			}
+		}
+
+		hudBuild.setAlpha(1);
+		startSong();
+	}
+
+	
 	public function startCountdown()
 	{
+		if(startConductor > 0) {
+			skippedCountdown();
+			return;
+		}
+
 		var daCount:Int = 0;
 		
 		var countTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
@@ -585,8 +624,11 @@ class PlayState extends MusicBeatState
 		startedSong = true;
 		for(music in musicList)
 		{
+			var storedTime:Float = music.time;
+			trace("stored time " + storedTime);
 			music.stop();
 			music.play();
+			music.time = storedTime;
 
 			if(paused) {
 				music.pause();
@@ -1708,6 +1750,22 @@ class PlayState extends MusicBeatState
 		super.stepHit();
 		stageBuild.stepHit(curStep);
 		syncSong();
+	}
+
+	function setTime(newTime:Float):Void
+	{
+		if(newTime > 0)
+			newTime -= 820;
+
+		for(music in musicList) {
+			music.time = newTime;
+		}
+
+		if(newTime > 0)
+			Conductor.songPos = newTime - (Conductor.crochet * 5);
+		else
+			Conductor.songPos = newTime;
+			
 	}
 
 	public function syncSong():Void

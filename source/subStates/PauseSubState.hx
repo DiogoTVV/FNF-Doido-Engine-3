@@ -168,6 +168,7 @@ class PauseSubState extends MusicBeatSubState
 						closePause();
 
 					case "restart song":
+						PlayState.startConductor = 0;
 						Main.skipStuff();
 						Main.resetState();
 					
