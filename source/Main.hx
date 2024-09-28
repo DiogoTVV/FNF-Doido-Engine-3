@@ -1,6 +1,7 @@
 package;
 
 import data.*;
+import data.GameData;
 import flixel.FlxG;
 import flixel.FlxState;
 import openfl.display.Sprite;

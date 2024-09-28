@@ -34,6 +34,7 @@
 
 	<source path="source" />
 	<assets path="assets" />
+	<assets path="assets_android" rename="assets"/>
 
 	<!-- _____________________________ Custom Defines ___________________________ -->
 

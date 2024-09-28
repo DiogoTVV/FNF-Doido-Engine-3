@@ -5,6 +5,7 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID as FlxPad;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.FlxInput.FlxInputState;
+import data.MobileUtil;
 
 using haxe.EnumTools;
 
@@ -70,6 +71,22 @@ class Controls
 			if(FlxG.gamepads.lastActive.checkStatus(key, inputState)
 			&& key != FlxPad.NONE)
 				return true;
+		}
+
+		// mobile
+		switch (bind) {
+			case "UI_LEFT":
+				return SwipeUtil.swipeLeft;
+			case "UI_DOWN":
+				return SwipeUtil.swipeDown;
+			case "UI_UP":
+				return SwipeUtil.swipeUp;
+			case "UI_RIGHT":
+				return SwipeUtil.swipeRight;
+			case "ACCEPT":
+				return TouchUtil.justReleased && !SwipeUtil.swipeLeft && !SwipeUtil.swipeRight;
+			//case "BACK" | "PAUSE":
+			//	return Main.activeState.virtualPad.justPressed(BACK);
 		}
 
 		return false;

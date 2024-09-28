@@ -7,10 +7,12 @@ import flixel.FlxSubState;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUIState;
 import flixel.group.FlxGroup;
+import gameObjects.android.VPad;
 //import data.Conductor.BPMChangeEvent;
 
 class MusicBeatState extends FlxUIState
 {
+	var virtualPad:VPad = new VPad();
 	override function create()
 	{
 		super.create();
@@ -83,6 +85,11 @@ class MusicBeatState extends FlxUIState
 	{
 		// finally you're useful for something
 		curBeat = Math.floor(curStep / 4);
+	}
+
+	function createPad(Mode:VAction) {
+		virtualPad = new VPad(Mode);
+		add(virtualPad);
 	}
 }
 
