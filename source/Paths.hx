@@ -175,18 +175,15 @@ class Paths
 	}
 
 	public static function script(key:String):String
-		return getContent('scripts/$key');
+		return getContent('$key');
 
 	public static function getScriptArray(?song:String):Array<String>
 	{
 		var arr:Array<String> = [];
-		for(folder in [Paths.readDir("scripts"), Paths.readDir('songs/$song')])
+		for(folder in ["scripts", 'songs/$song'])
 		{
-			for(file in folder)
-			{
-				if(file.endsWith(".hxc"))
-					arr.push(file);
-			}
+			for(file in readDir(folder, ".hxc", false))
+				arr.push('$folder/$file');
 		}
 		//trace(arr);
 		return arr;

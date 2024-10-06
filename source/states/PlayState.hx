@@ -182,7 +182,7 @@ class PlayState extends MusicBeatState
 		//	SONG = SongData.loadFromJson("ugh");
 
 		// loading scripts
-		var scriptPaths:Array<String> = Paths.getScriptArray();
+		var scriptPaths:Array<String> = Paths.getScriptArray(SONG.song);
 		for(path in scriptPaths)
 		{
 			var newScript:Iris = new Iris(Paths.script('$path'));
